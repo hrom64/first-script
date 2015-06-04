@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-a = {}
-b = {}
 filenames = []
-array=[]
-array1=[]
+array={}
+array1={}
 
 import sys
 
@@ -14,14 +12,15 @@ for filename in filenames:
     for line in open(filename):
         if 'task-clock' in line:
             line = line.split()
-            array.append ([filename,(float(line [0]))])
+            array[filename]=(float(line [0]))
         if 'seconds time elapsed' in line:
             line = line.split()
-            array1.append ([filename,(float(line [0]))])
-a=array
-b=array1
-
-print a 
+            array1[filename]=(float(line [0]))
+filenames.append("Avarage")
+array["Avarage"]= sum(array.values())/len(array.values())
+array1["Avarage"]= sum(array1.values())/len(array1.values())
+for filename in filenames:      
+    print "%20s: %20s %20s" % (filename,array.setdefault(filename,[]),array1.setdefault(filename,[]))
 
 
 
