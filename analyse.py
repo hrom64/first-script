@@ -7,10 +7,8 @@ s1=[]
 
 import sys
 
-for arg in sys.argv:
-    filenames.append (arg)
-del filenames[0]
-for filename in filenames:
+for filename in sys.argv[1:]:
+    filenames.append (filename)
     for line in open(filename):
         if 'task-clock' in line:
             line = line.split()
