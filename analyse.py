@@ -1,42 +1,23 @@
 #!/usr/bin/env python
-filenames = []
 dic={}
-array={}
-array1={}
 s=[]
 s1=[]
 
 import sys
 
 for filename in sys.argv[1:]:
-    filenames.append (filename)
-    
-
+    dic[filename]={"task-clock":[],"seconds time elapsed":[]}    
     for line in open(filename):
-        dic[filename]={"task-clock":[],"seconds time elapsed":[]}
         if 'task-clock' in line:
             line = line.split()
-            a=array.setdefault(filename,[])
-            a.append(float(line [0]))
-            array[filename]=(a)
-            dic[filename]["task-clock"]=(float(line [0]))
+            s.append(float(line [0]))
+            dic[filename]["task-clock"].append(float(line [0]))
         if 'seconds time elapsed' in line:
             line = line.split()
-            a=array1.setdefault(filename,[])
-            a.append(float(line [0]))
-            array1[filename]=(a)
+            s1.append(float(line [0]))
             dic[filename]["seconds time elapsed"].append(float(line [0]))
-for key in array.keys():
-    s+=array[key]
-for key in array1.keys():
-    s1+=array1[key]
-filenames.append("Avarage")
-array["Avarage"]= [sum(s)/len(s)]
-array1["Avarage"]= [sum(s1)/len(s1)]
-for filename in filenames:      
-    print "%20s: %20s %20s" % (filename,', '.join(map(str,(array.setdefault(filename,[])))),', '.join(map(str,(array1.setdefault(filename,[])))))
-print dic
-
-
+for filename in sorted(dic.keys()):
+    print "%20s: %20s %20s" % (filename,', '.join(map(str,(dic[filename]["task-clock"]))),', '.join(map(str,(dic[filename]["seconds time elapsed"]))))
+print "%20s: %20s %20s" % ('Average', sum(s)/len(s),sum(s1)/len(s1))
         
 
