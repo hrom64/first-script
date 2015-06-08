@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 dic={}
 
-import sys
+import sys,re
 
 for filename in sys.argv[1:]:
     dic[filename]={"task-clock":[],"seconds time elapsed":[]}    
     f=open(filename)
     for line in f:
-        if 'task-clock' in line:
-            line = line.split()
-            dic[filename]["task-clock"].append(float(line [0]))
-        if 'seconds time elapsed' in line:
-            line = line.split()
-            dic[filename]["seconds time elapsed"].append(float(line [0]))
+        m = re.search('(\d+[.]?\d*)\s+task-clock', line)
+        if m:
+            dic[filename]["task-clock"].append(float(m.group(1)))
+  
+        m = re.search('(\d+[.]?\d*)\s+seconds time elapsed', line)
+        if m :
+            dic[filename]["seconds time elapsed"].append(float(m.group(1)))
     f.close()                    
 for filename in sorted(dic.keys()):
     print "%20s: %20s %20s" % (filename,', '.join(map(str,(dic[filename]["task-clock"]))),', '.join(map(str,(dic[filename]["seconds time elapsed"]))))
