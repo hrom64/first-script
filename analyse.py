@@ -1,25 +1,35 @@
 #!/usr/bin/env python
-dic={}
 
 import sys,re
 
-for filename in sys.argv[1:]:
-    dic[filename]={"task-clock":[],"seconds time elapsed":[]}    
+class analyser:
+    def __init__(self,name,string):
+        self.name=name
+        self.string=string
+        self.dic={}
+    def search(self,filename,line):
+        m = re.search(self.string, line)
+        if m:
+            self.dic.setdefault(filename, []).append(float(m.group(1)))        
+    def average(self):
+        a=[z[y] for z in self.dic.values() for y in range(len(z))]
+        return sum(a)/len(a)    
+    def prn(self,filename):
+        return ', '.join(map(str,(self.dic.setdefault(filename,[]))))
+
+task=analyser("task-clock",'(\d+[.]?\d*)\s+task-clock')
+seconds=analyser("seconds time elapsed",'(\d+[.]?\d*)\s+seconds time elapsed')
+
+
+for filename in sys.argv[1:]:  
     f=open(filename)
     for line in f:
-        m = re.search('(\d+[.]?\d*)\s+task-clock', line)
-        if m:
-            dic[filename]["task-clock"].append(float(m.group(1)))
-  
-        m = re.search('(\d+[.]?\d*)\s+seconds time elapsed', line)
-        if m :
-            dic[filename]["seconds time elapsed"].append(float(m.group(1)))
+        task.search(filename,line)
+        seconds.search(filename,line)
+
     f.close()                    
-for filename in sorted(dic.keys()):
-    print "%20s: %20s %20s" % (filename,', '.join(map(str,(dic[filename]["task-clock"]))),', '.join(map(str,(dic[filename]["seconds time elapsed"]))))
+for filename in sorted(task.dic.keys()):
+    print "%20s: %20s %20s" % (filename,task.prn(filename),seconds.prn(filename))
 
-def averagedic(x):
-    a=[z[x][y] for z in dic.values() for y in range(len(z[x]))]
-    return sum(a)/len(a)
+print "%20s: %20s %20s" % ('Average',task.average(),seconds.average())
 
-print "%20s: %20s %20s" % ('Average',averagedic('task-clock'),averagedic('task-clock'))
