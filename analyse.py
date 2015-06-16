@@ -19,39 +19,26 @@ class analyser:
                     if m:
                         self.dic[filename][name].append(float(m.group(1)))
             f.close()
-    def average(self):
-        a=[z[y] for z in self.dic.values() for y in range(len(z))]
+    def average(self,x):
+        a=[z[x][y] for z in self.dic.values() for y in range(len(z[x]))]
         return sum(a)/len(a)    
-    def column(self):
-        a=[]
-        for x in self.str_name:
-            a.append("', '.join(map(str,(self.dic[filename][%s]))))" % (x)) #for x in self.str_name)] 
-        return ', '.join(a) 
-    def prn(self,filename):
-        return ', '.join(map(str,(self.dic[filename].setdefault(filename,[]))))
+ #   def column(self):
+  #      a=[]
+   #     for x in self.str_name:
+    #        a.append("', '.join(map(str,(self.dic[filename][%s]))))" % (x)) #for x in self.str_name)] 
+     #   return ', '.join(a) 
+    def prn(self):
+        print "%20s: %20s %20s" % ('Average',self.average(self.str_name[0]),self.average(self.str_name[1]))
     def sss(self):
         for filename in sorted(self.dic.keys()):
-            return "%20s: %20s " % (filename,', '.join(map(str,(self.dic[filename]["task-clock"]))))
-
+            print "%20s: %20s %20s" % (filename,', '.join(map(str,(self.dic[filename][self.str_name[0]]))),', '.join(map(str,(self.dic[filename][self.str_name[1]]))))
+    def __str__(self):
+        self.sss()
+        self.prn()
+        return "---------------------------------------------------------------"
 
 data=analyser(   [ ("task-clock",'(\d+[.]?\d*)\s+task-clock'), ("seconds time elapsed",'(\d+[.]?\d*)\s+seconds time elapsed') ]   )        
-#task=analyser("task-clock",'(\d+[.]?\d*)\s+task-clock')
-#seconds=analyser("seconds time elapsed",'(\d+[.]?\d*)\s+seconds time elapsed')
-
-
-#for filename in sys.argv[1:]:  
-#    f=open(filename)
-#    for line in f:
-#        task.search(filename,line)
-#        seconds.search(filename,line)
-
-#    f.close()                    
-#for filename in sorted(task.dic.keys()):
-#    print "%20s: %20s %20s" % (filename,task.prn(filename),seconds.prn(filename))
-
-#print "%20s: %20s %20s" % ('Average',task.average(),seconds.average())
-
 data.parse (  sys.argv[1:])
-print data.sss()
+print data
 
 
